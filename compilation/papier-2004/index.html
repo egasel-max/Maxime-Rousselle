@@ -1,0 +1,623 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les oiseaux de Maxime</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Familjen+Grotesk:wght@400;500;600&display=swap">
+<style>
+/* Layout : carnet d'atelier — sommaire latéral fixe (desktop) / tiroir (mobile), colonne de lecture ~66ch, figures en marge pleine largeur */
+:root{
+  --paper:#f3f5f6; --sheet:#ffffff; --ink:#1b2328; --muted:#5d6a72; --rule:#d6dde1;
+  --sky:#2b5d82; --spi:#c4472b; --fig:#eef1f3;
+  --f-body:"Newsreader", Georgia, "Times New Roman", serif;
+  --f-ui:"Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#12171b; --sheet:#182026; --ink:#e3e8eb; --muted:#97a5ad; --rule:#2c3840;
+  --sky:#8cb9dc; --spi:#ec8a6f; --fig:#e9edef; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#12171b; --sheet:#182026; --ink:#e3e8eb; --muted:#97a5ad; --rule:#2c3840;
+  --sky:#8cb9dc; --spi:#ec8a6f; --fig:#e9edef; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font:400 1.125rem/1.62 var(--f-body);
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px))}
+a{color:var(--sky);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{color:var(--spi)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--spi);outline-offset:2px}
+
+.wrap{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:248px minmax(0,1fr);gap:48px;padding-block:32px 64px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr);gap:20px;padding-block:16px 48px}}
+
+/* Sommaire */
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start;font-family:var(--f-ui);font-size:.92rem}
+.brand{display:block;text-decoration:none;color:var(--ink);margin-bottom:22px}
+.brand b{display:block;font:600 1.35rem/1.15 var(--f-body);letter-spacing:-.01em}
+.brand span{display:block;color:var(--muted);font-size:.8rem;margin-top:4px}
+.side h3{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:22px 0 6px;font-weight:600}
+.side ul{list-style:none;margin:0;padding:0}
+.side li a{display:block;padding:5px 10px;margin-left:-10px;border-radius:4px;color:var(--ink);text-decoration:none;line-height:1.3}
+.side li a:hover{background:var(--sheet)}
+.side li a[aria-current="page"]{background:var(--sheet);color:var(--sky);box-shadow:inset 2px 0 0 var(--spi)}
+.side .src{margin-top:26px;padding-top:14px;border-top:1px solid var(--rule);color:var(--muted);font-size:.78rem;line-height:1.45}
+.menubtn{display:none}
+@media (max-width:860px){
+  .side{position:static}
+  .side nav{display:none}
+  .side.open nav{display:block}
+  .menubtn{display:inline-flex;align-items:center;gap:8px;font:500 .9rem var(--f-ui);background:var(--sheet);color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:8px 12px;cursor:pointer}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .brand{margin-bottom:0}
+}
+
+/* Pages */
+main{min-width:0}
+.page{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:40px clamp(18px,5vw,56px) 36px}
+.page > *{max-width:66ch}
+.page > figure,.page > .figrow{max-width:none}
+.kicker{font:600 .72rem var(--f-ui);text-transform:uppercase;letter-spacing:.14em;color:var(--spi);margin:0 0 10px}
+h1{font:600 clamp(1.9rem,4vw,2.6rem)/1.1 var(--f-body);letter-spacing:-.015em;margin:0 0 6px;text-wrap:balance}
+h2{font:600 1.45rem/1.2 var(--f-body);margin:2.2em 0 .5em;text-wrap:balance}
+h3.sub{font:600 .78rem var(--f-ui);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:2em 0 .4em}
+.orig{font:400 .78rem var(--f-ui);color:var(--muted);margin:0 0 28px;word-break:break-all}
+p{margin:0 0 1em}
+.lede{font-size:1.25rem;line-height:1.5}
+em.ps,.ps{font-style:italic}
+.sig{text-align:right;font-style:italic;margin-top:1.4em}
+ol.steps,ul.list{padding-left:1.3em;margin:0 0 1em}
+ol.steps li,ul.list li{margin-bottom:.35em}
+.diag{border-left:2px solid var(--rule);padding-left:16px;margin:0 0 1.2em}
+.diag p{margin:.2em 0}
+.diag strong{font-family:var(--f-ui);font-weight:600;font-size:.95rem}
+.callout{font-family:var(--f-ui);font-size:.95rem;font-weight:500;background:var(--paper);border-radius:6px;padding:12px 16px}
+blockquote{margin:1em 0;padding:0 0 0 18px;border-left:3px solid var(--spi);font-variant:small-caps;letter-spacing:.02em}
+.missing{color:var(--muted);border-bottom:1px dotted var(--muted);cursor:help}
+
+/* Figures */
+figure{margin:28px 0}
+figure button{all:unset;cursor:zoom-in;display:block;background:var(--fig);border-radius:4px;padding:10px;max-width:100%}
+figure img{display:block;max-width:100%;height:auto;margin:0 auto;border-radius:2px}
+figure.diagram img{mix-blend-mode:multiply}
+figcaption{font:400 .82rem/1.4 var(--f-ui);color:var(--muted);margin-top:8px}
+figure.side-fig{float:right;width:min(42%,300px);margin:6px 0 16px 24px}
+figure.side-fig.left{float:left;margin:6px 24px 16px 0}
+.clear{clear:both}
+.figrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:28px 0}
+.figrow figure{margin:0}
+@media (max-width:620px){figure.side-fig,figure.side-fig.left{float:none;width:auto;margin:20px 0}}
+
+/* Pied de page / pagination */
+.pager{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:40px;padding-top:18px;border-top:1px solid var(--rule);font-family:var(--f-ui);font-size:.9rem;max-width:none}
+.pager a{text-decoration:none}
+.pager small{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em}
+.pager .next{text-align:right;margin-left:auto}
+
+/* Sommaire d'accueil */
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:24px 0 8px;max-width:none}
+.toc a{display:flex;flex-direction:column;text-decoration:none;color:var(--ink);border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--sheet)}
+.toc a:hover{border-color:var(--sky)}
+.toc .th{aspect-ratio:4/3;background:var(--fig);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.toc .th img{width:100%;height:100%;object-fit:cover}
+.toc .tx{padding:10px 12px 12px;font-family:var(--f-ui)}
+.toc .tx b{display:block;font-weight:600;font-size:.98rem}
+.toc .tx span{color:var(--muted);font-size:.8rem;line-height:1.35;display:block;margin-top:2px}
+.note{font:400 .88rem/1.5 var(--f-ui);color:var(--muted);border-top:1px solid var(--rule);padding-top:14px;margin-top:28px}
+
+/* Visionneuse */
+.lb{position:fixed;inset:0;background:rgba(10,14,17,.92);display:flex;align-items:center;justify-content:center;z-index:20;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.lb img{max-width:100%;max-height:88vh;background:#fff;border-radius:3px}
+.lb p{position:absolute;bottom:max(14px,env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;color:#dfe5e8;font:400 .85rem var(--f-ui);margin:0;padding:0 16px}
+.lb button{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:calc(env(safe-area-inset-right,0px) + 12px);font:500 .9rem var(--f-ui);background:#fff;color:#1b2328;border:0;border-radius:6px;padding:8px 12px;cursor:pointer}
+@media (prefers-reduced-motion:no-preference){.page{animation:in .25s ease-out}@keyframes in{from{transform:translateY(6px)}to{transform:none}}}
+</style>
+</head><body><div id="mx-retour" style="font:13px/1.5 Arial,sans-serif;background:#1f3b5c;padding:6px 12px"><a href="../index.html" style="color:#fff;font-weight:bold">&#9666; Archive Maxime Rousselle</a></div>
+
+<div class="wrap">
+<aside class="side" id="side">
+  <div class="topbar">
+    <a class="brand" href="#sommaire"><b>Les oiseaux de Maxime</b><span>Maxime Rousselle, cervoliste</span></a>
+    <button class="menubtn" id="menubtn" aria-expanded="false" aria-controls="sidenav">Sommaire</button>
+  </div>
+  <nav id="sidenav">
+    <h3>Le site</h3>
+    <ul>
+      <li><a href="#sommaire">Sommaire</a></li>
+      <li><a href="#motivations">Motivations</a></li>
+    </ul>
+    <h3>Premiers cerfs-volants</h3>
+    <ul>
+      <li><a href="#jonathan">Jonathan, le King</a></li>
+      <li><a href="#autres-pilotables">Autres pilotables</a></li>
+      <li><a href="#oiseau-bleu">L'Oiseau bleu</a></li>
+      <li><a href="#harfang-sterne">Harfang, Sterne</a></li>
+      <li><a href="#oiseau-light">Oiseau Light, Rokakku</a></li>
+    </ul>
+    <h3>Cerfs-volants récents</h3>
+    <ul>
+      <li><a href="#albatros">L'Albatros</a></li>
+      <li><a href="#spiralier-messager">Spiralier, Messager</a></li>
+      <li><a href="#megoel">Megoel</a></li>
+      <li><a href="#indoor">Indoor</a></li>
+    </ul>
+    <h3>Articles, plans</h3>
+    <ul>
+      <li><a href="#art-jonathan">Allongement cinq, ou « Jonathan »</a></li>
+      <li><a href="#art-king">Changez de concept avec le « King »</a></li>
+      <li><a href="#art-martinet">Hirondelle ? non, Martinet</a></li>
+      <li><a href="#art-force10">Force 10</a></li>
+      <li><a href="#art-pourquoi">Mais pourquoi on s'est lancé là-dedans ?</a></li>
+    </ul>
+    <p class="src">Reconstruit d'après la copie papier du site <i>perso.wanadoo.fr/maximecv</i> imprimée le 2&nbsp;juin 2004 (numérisation Jean-Luc Vansnickt).</p>
+  </nav>
+</aside>
+
+<main id="main">
+
+<!-- ============ SOMMAIRE ============ -->
+<article class="page" data-page="sommaire" data-title="Sommaire">
+  <p class="kicker">Archive · site personnel, 1994–2004</p>
+  <h1>Les oiseaux de Maxime</h1>
+  <p class="lede">Dix ans de cerfs-volants en forme d'oiseaux, du goéland pilotable de 2,40&nbsp;m au Megoel de 8&nbsp;m, racontés et dessinés par leur auteur, Maxime Rousselle.</p>
+  <p>Maxime a découvert le cerf-volant à l'été 1994 avec un mauvais jouet, et n'a plus quitté la piste des oiseaux : pilotables à deux lignes d'abord, puis monofils de grande envergure, et quelques essais d'indoor en bambou et papier japonais. Ses articles, publiés pour la plupart dans <i>Le Lucane</i> du Cerf-Volant Club de France, en donnent les plans et les réglages.</p>
+  <div class="toc">
+    <a href="#motivations"><div class="th"><img src="img/motiv-principe.jpg" alt=""></div><div class="tx"><b>Motivations</b><span>Comment tout a commencé</span></div></a>
+    <a href="#jonathan"><div class="th"><img src="img/king-photo1.jpg" alt=""></div><div class="tx"><b>Jonathan, le King</b><span>Premiers oiseaux pilotables</span></div></a>
+    <a href="#autres-pilotables"><div class="th"><img src="img/pil-delta.jpg" alt=""></div><div class="tx"><b>Autres pilotables</b><span>Delta-oiseau, Mouette, Martinet</span></div></a>
+    <a href="#oiseau-bleu"><div class="th"><img src="img/bleu-1.jpg" alt=""></div><div class="tx"><b>L'Oiseau bleu</b><span>3&nbsp;m d'envergure, allongement 7,5</span></div></a>
+    <a href="#harfang-sterne"><div class="th"><img src="img/harf-1.jpg" alt=""></div><div class="tx"><b>Harfang, Sterne</b><span>Vol de nuit, deltas monofils</span></div></a>
+    <a href="#oiseau-light"><div class="th"><img src="img/light-1.jpg" alt=""></div><div class="tx"><b>Oiseau Light, Rokakku</b><span>Pétole et combats</span></div></a>
+    <a href="#albatros"><div class="th"><img src="img/alb-revoir.jpg" alt=""></div><div class="tx"><b>L'Albatros</b><span>6&nbsp;m, force&nbsp;1 à force&nbsp;7</span></div></a>
+    <a href="#spiralier-messager"><div class="th"><img src="img/spir-1.jpg" alt=""></div><div class="tx"><b>Spiralier, Messager</b><span>Vent léger et curiosités</span></div></a>
+    <a href="#megoel"><div class="th"><img src="img/meg-1.jpg" alt=""></div><div class="tx"><b>Megoel</b><span>Le méga-goéland de 8&nbsp;m</span></div></a>
+    <a href="#indoor"><div class="th"><img src="img/manta.jpg" alt=""></div><div class="tx"><b>Indoor</b><span>Bambou Bird, Manta</span></div></a>
+    <a href="#art-jonathan"><div class="th"><img src="img/artijon-demiplan.jpg" alt=""></div><div class="tx"><b>Article : Jonathan</b><span>Plan, bride et réglages</span></div></a>
+    <a href="#art-king"><div class="th"><img src="img/artiking-plan.jpg" alt=""></div><div class="tx"><b>Article : le King</b><span>Rémiges et bride</span></div></a>
+    <a href="#art-martinet"><div class="th"><img src="img/artimartin-plan.jpg" alt=""></div><div class="tx"><b>Article : Martinet</b><span>Simple à construire, à régler, à piloter</span></div></a>
+    <a href="#art-force10"><div class="th"><img src="img/f10-vue.jpg" alt=""></div><div class="tx"><b>Article : Force 10</b><span>Le cerf-volant en plaques d'égout</span></div></a>
+    <a href="#art-pourquoi"><div class="th"><img src="img/alb-1.jpg" alt=""></div><div class="tx"><b>Article : Pourquoi ?</b><span>Ce qui pousse les cervolistes</span></div></a>
+  </div>
+  <p class="note">Ce sommaire est ajouté pour la reconstruction ; la page d'accueil d'origine ne figure pas dans la copie de 2004. Le texte est retranscrit fidèlement depuis les impressions, à quelques coquilles près. Les articles « Le Harfang », « L'Oiseau Light » et « L'Albatros », signalés par un soulignement pointillé, n'ont pas été imprimés et restent à retrouver dans les archives web. Cliquez sur une image pour l'agrandir.</p>
+</article>
+
+<!-- ============ MOTIVATIONS ============ -->
+<article class="page" data-page="motivations" data-title="Motivations" hidden>
+  <p class="kicker">Le site</p>
+  <h1>Motivations</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/motiv.html</p>
+  <p>J'ai découvert le cerf-volant par hasard : on m'a offert un pilotable vraiment très mauvais. J'ai essayé de l'améliorer, mais il s'est rapidement avéré plus facile d'en faire un nouveau.</p>
+  <p>J'ai donc fait un delta pilotable classique, en couverture de survie scotchée.</p>
+  <figure class="side-fig diagram"><button data-cap="Jonathan, principe du pilotage : le nœud de force reçoit la somme des tractions des deux mains et subit les efforts ; la différence des tractions actionne le « gauchissement »."><img src="img/motiv-principe.jpg" alt="Schéma de bride de Jonathan, principe du pilotage par gauchissement"></button><figcaption>Jonathan, principe du pilotage : la différence des tractions actionne le gauchissement.</figcaption></figure>
+  <p>Mais j'ai rapidement voulu créer quelque chose de plus élancé, et la forme des oiseaux s'imposait. J'ai donc commencé à concevoir et réaliser des oiseaux pilotables (2&nbsp;lignes) comme <a href="#jonathan">Jonathan</a> (1994), <a href="#jonathan">le King</a>, <a href="#autres-pilotables">la Mouette</a>. Cela n'a pas été simple, le bridage pour faire tourner étant basé sur la déformation de la machine !</p>
+  <p>L'exception était le <a href="#autres-pilotables">Martinet</a>, qui fonctionnait selon le principe du delta classique, et qui a d'ailleurs été produit en petite série par « Les Cavaliers du Ciel ».</p>
+  <div class="clear"></div>
+  <figure class="side-fig left diagram"><button data-cap="Aile de 3 m en pilotable : petite rotation, recul, fort dérapage sous la traction de la ligne gauche."><img src="img/motiv-derapage.jpg" alt="Schéma : traction sur la ligne gauche, recul de l'aile et fort dérapage"></button><figcaption>À 3&nbsp;m d'envergure : petite rotation, fort dérapage.</figcaption></figure>
+  <p>J'ai alors voulu faire plus grand (3&nbsp;m d'envergure), mais la pilotabilité devenait pratiquement impossible, l'aile « gauchie » reculant et arrêtant le déplacement, et le dérapage devenant plus important que la rotation.</p>
+  <p>J'ai alors transformé ce CV en monofil : <a href="#oiseau-bleu">l'Oiseau bleu</a>. Mais ceci nécessita 1&nbsp;an de recherche et de modifications pour trouver le principe qui rende stable un engin sans queue, ultra-court (25&nbsp;cm) et ultra-large (300&nbsp;cm).</p>
+  <div class="clear"></div>
+  <p>Ensuite j'ai conçu d'autres modèles dont <a href="#oiseau-light">l'Oiseau Light</a> pour la pétole, la chouette blanche <a href="#harfang-sterne">Harfang</a> pour le vol de nuit.</p>
+  <p>Enfin, j'ai voulu faire plus grand, et j'ai extrapolé l'Oiseau bleu en le modifiant pour réaliser <a href="#albatros">l'Albatros</a> de 6&nbsp;m d'envergure. Celui-ci est une réussite : bien stable, il vole de force&nbsp;1 à force&nbsp;7. Je suis même passé plus tard à 8&nbsp;m avec <a href="#megoel">Megoel</a>.</p>
+  <p>J'ai aussi tâté un peu d'<a href="#indoor">indoor</a> avec le Harfang allégé, Bambou Bird en bambou et papier, et Manta en bambou et plastique (provisoirement).</p>
+  <p>Et maintenant ? J'ai plusieurs idées, on verra…</p>
+</article>
+
+<!-- ============ JONATHAN / KING ============ -->
+<article class="page" data-page="jonathan" data-title="Jonathan, le King" hidden>
+  <p class="kicker">Premiers cerfs-volants</p>
+  <h1>Jonathan le Goéland</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/jon.html</p>
+  <figure class="side-fig left"><button data-cap="Jonathan, premier oiseau pilotable, présenté à l'intérieur."><img src="img/jon-photo1.jpg" alt="Maxime tenant Jonathan, debout, dans une pièce"></button></figure>
+  <p>Jonathan a été mon premier oiseau pilotable, dans mes débuts tâtonnants. J'ai d'abord construit un modèle en couverture scotchée, pas très présentable, mais qui volait bien quoique un peu lentement. Il a fait ses premières armes à Bourges, à la fête du Cerf-Volant Club de France (CVCF).</p>
+  <div class="clear"></div>
+  <figure class="side-fig"><button data-cap="Jonathan en vol : on distingue le palonnier raccordé à la bride."><img src="img/jon-photo2.jpg" alt="Jonathan en vol, palonnier visible"></button></figure>
+  <p>Je l'ai ensuite fait évoluer et construit en spi, le mylar étant trop fragile. Il m'a fallu pour cela acheter ma première machine à coudre (50&nbsp;F aux puces) et me mettre à la couture. Il ne faut pas s'en faire une montagne, on s'en tire très bien rapidement, avec 2&nbsp;sortes de points seulement.</p>
+  <p>La photo montre le palonnier raccordé comme sur le schéma de la page « <a href="#motivations">Motivations</a> » et qui reste la meilleure solution que j'aie trouvée pour piloter par déformation du cerf-volant, même si elle n'est pas parfaite.</p>
+  <p>Vous trouverez le plan dans l'article « <a href="#art-jonathan">Allongement 5, Jonathan</a> ».</p>
+  <div class="clear"></div>
+
+  <h2>Le King</h2>
+  <figure class="side-fig left"><button data-cap="Le King, aigle royal pilotable aux rémiges en bout d'aile."><img src="img/king-photo1.jpg" alt="Le King, cerf-volant aigle aux rémiges déployées"></button></figure>
+  <p>Ensuite, j'ai voulu faire un oiseau avec des rémiges en bout d'aile, mais moins d'envergure relative pour diminuer les problèmes de dérapage. J'ai pris pour modèle un aigle royal, c'est pourquoi je l'ai baptisé King.</p>
+  <p>Mon idée initiale était d'actionner chaque rémige avec une petite bride comme l'aile complète de Jonathan.</p>
+  <div class="clear"></div>
+  <figure class="side-fig"><button data-cap="Le King en vol."><img src="img/king-photo2.jpg" alt="Le King en vol, vu de dessous"></button></figure>
+  <p>Mais c'était trop complexe à réaliser pour un résultat peut-être nul. Alors j'ai seulement repris le principe de Jonathan, en actionnant toutes les rémiges en bloc. C'était plus simple, mais quand même pas biblique, croyez-moi !</p>
+  <p>Voyez le plan dans l'article « <a href="#art-king">Le King</a> ».</p>
+  <div class="clear"></div>
+</article>
+
+<!-- ============ AUTRES PILOTABLES ============ -->
+<article class="page" data-page="autres-pilotables" data-title="Autres pilotables" hidden>
+  <p class="kicker">Premiers cerfs-volants</p>
+  <h1>D'autres pilotables</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/pil.html</p>
+  <h2>Un Delta… oiseau</h2>
+  <figure class="side-fig"><button data-cap="Delta pilotable léger décoré d'un oiseau."><img src="img/pil-delta.jpg" alt="Delta pilotable décoré d'une silhouette d'oiseau"></button></figure>
+  <p>Pour m'amuser plus classiquement, j'ai aussi créé un delta pilotable… classique, léger (carbone&nbsp;4) car je volais à l'époque surtout au Bois de Boulogne, à Bagatelle où le vent est souvent masqué par les arbres. Évidemment, je n'ai pas pu m'empêcher d'y dessiner un oiseau…</p>
+  <div class="clear"></div>
+
+  <h2>La Mouette</h2>
+  <figure class="side-fig left"><button data-cap="La Mouette en vol."><img src="img/pil-mouette1.jpg" alt="La Mouette en vol"></button></figure>
+  <p>Pour revenir aux oiseaux purs, toujours pilotables, la Mouette a été un cerf-volant assez extrême, difficile à mettre au point et à faire voler. D'autant plus que j'ai expérimenté avec elle diverses formes de brides (à palonnier, mais aussi à anneau coulissant, inversées, etc. qui n'ont pas toujours été de francs succès…).</p>
+  <div class="clear"></div>
+  <figure class="side-fig"><button data-cap="La Mouette, aile très allongée."><img src="img/pil-mouette2.jpg" alt="La Mouette en vol, aile en arc"></button></figure>
+  <p>Avec l'expérience que j'ai acquise, je devrais maintenant la reprendre et je saurais sans aucun doute la faire marcher mieux, il est dommage en effet de la laisser au placard faute d'une solution parfaite. Car elle avait un vol et des évolutions très douces et très dansantes (plutôt slow) que j'aimerais revoir.</p>
+  <div class="clear"></div>
+
+  <h2>Le Martinet</h2>
+  <figure class="side-fig left"><button data-cap="Le Martinet en vol au-dessus de la mer."><img src="img/pil-martinet1.jpg" alt="Le Martinet en vol"></button></figure>
+  <p>Après la mouette au vol lent, j'ai voulu avoir plus rapide et me suis tourné vers le Martinet. L'armature transversale est constituée d'un tube central en carbone de 5,5, les bouts d'aile étant des joncs de 3 enfilés dans le tube (voir plan pour les détails). Pour lui, j'ai repris un mode de pilotage semblable à celui du delta. Il est un peu moins efficace qu'un vrai delta à cause de la souplesse de l'arc qui constitue l'armature principale, mais on peut quand même passer des axels avec.</p>
+  <div class="clear"></div>
+  <div class="figrow">
+    <figure><button data-cap="Le Martinet en vol."><img src="img/pil-martinet2.jpg" alt="Le Martinet, vu de dessous"></button></figure>
+    <figure><button data-cap="Détail de structure du Martinet : arc et bridage."><img src="img/pil-martinet3.jpg" alt="Détail de structure du Martinet"></button><figcaption>Détail de structure</figcaption></figure>
+  </div>
+  <p>Malgré son envergure, il a peu de surface, vue sa forme échancrée, et nécessite un peu de vent. Il prend les rafales et les tractions brusques en accélérant et en repliant les ailes vers l'arrière, ce qui est amusant mais le rend inapte à la précision ! Il vaut mieux faire des cercles avec que des carrés… Il est quand même joueur et a été construit en petite série par « les Cavaliers du Ciel » (bonjour Mona, message personnel) sous le nom de « Hirondelle ». Si vous en avez acheté un et que vous ayez des difficultés (en particulier fragilité des emboîtements), contactez-moi et je vous dirai quoi faire.</p>
+  <p>Vous pouvez lire l'article paru au Lucane « <a href="#art-martinet">Hirondelle ? non, Martinet</a> ».</p>
+</article>
+
+<!-- ============ OISEAU BLEU ============ -->
+<article class="page" data-page="oiseau-bleu" data-title="L'Oiseau bleu" hidden>
+  <p class="kicker">Premiers cerfs-volants</p>
+  <h1>L'Oiseau bleu</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/bleu.html</p>
+  <figure><button data-cap="L'Oiseau bleu en vol : 3 m d'envergure pour 20 cm de profondeur d'aile."><img src="img/bleu-1.jpg" alt="L'Oiseau bleu en vol, ailes très allongées"></button></figure>
+  <p>L'Oiseau bleu, conçu au départ pour être pilotable, n'a jamais été raisonnablement utilisable dans cette version et j'ai résolu d'en faire un monofil. Du coup, il m'a servi de transition, forcée mais heureuse et féconde, vers cette activité monofilistique (je n'aime pas « Statique » qui a un côté méprisant et dont l'observation ne confirme d'ailleurs pas le sens). J'avais décidé de pousser au maximum l'envergure relative, du coup il fait 3&nbsp;m d'envergure alors que l'aile n'a que 20&nbsp;cm de profondeur soit un allongement de 7,5 (c'est calculé officiellement sur UNE aile).</p>
+  <figure class="side-fig"><button data-cap="L'Oiseau bleu en vol."><img src="img/bleu-2.jpg" alt="L'Oiseau bleu en vol"></button></figure>
+  <p>Même en monofil, ceci n'est pas sans poser des problèmes. D'abord, cette forme n'est pas stable naturellement et la queue courte n'a pas d'efficacité. Il m'a fallu beaucoup d'essais pour trouver la solution, basée sur la forme des bouts d'aile. Ensuite la symétrie est très impérative, le moindre défaut de traînée ou d'incidence l'entraîne à tirer voire à tomber du côté où ça penche. De plus, au-dessus de force&nbsp;3 ou&nbsp;4, les ailes ont tendance à battre à fréquence assez élevée, même pas naturelle pour un oiseau. Et si le vent se renforce encore, la déformation est telle que l'oiseau ne tient pas en l'air.</p>
+  <div class="clear"></div>
+  <figure class="side-fig left"><button data-cap="L'Oiseau bleu au sol, à l'atelier."><img src="img/bleu-3.jpg" alt="L'Oiseau bleu posé à l'intérieur, près d'une chaise"></button></figure>
+  <p>Même par vent normal, le réglage est assez délicat et doit être peaufiné à chaque remontage, si bien que je n'ai jamais osé publier le plan. Grâce à une armature en carbone, il est assez résistant et il ne casse jamais en vol (les ailes plient avant et perdent de la force). Les casses ont lieu au contact du sol, lors d'atterrissages sur la pointe d'aile. Mais cela reste très limité.</p>
+  <p>Au sol, il reste d'une taille assez maniable, et plié il n'occupe pas de place.</p>
+  <div class="clear"></div>
+  <figure class="side-fig"><button data-cap="Armature : barre de carbone transversale tenue au corps par une ficelle réglable."><img src="img/bleu-4.jpg" alt="Détail de l'armature de l'Oiseau bleu"></button></figure>
+  <p>L'armature est assez simple. Le dièdre est tenu non par un raccord central qui exploserait sauf à le faire en tube de plomberie, mais par une barre de carbone transversale, maintenue au corps au centre par une ficelle de longueur réglable permettant de varier le dièdre. J'ai repris ça sur la plupart de mes réalisations ultérieures, ça évite de faire un raccord coudé au bon angle (lequel ?) et toujours fragile ou lourd.</p>
+  <div class="clear"></div>
+</article>
+
+<!-- ============ HARFANG / STERNE ============ -->
+<article class="page" data-page="harfang-sterne" data-title="Harfang, Sterne" hidden>
+  <p class="kicker">Premiers cerfs-volants</p>
+  <h1>Le Harfang</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/harf.html</p>
+  <figure><button data-cap="Le Harfang, chouette blanche conçue pour le vol de nuit."><img src="img/harf-1.jpg" alt="Le Harfang, cerf-volant chouette blanche aux ailes déployées"></button></figure>
+  <p>Le Harfang, comme chacun sait, est une chouette arctique pratiquement blanche (découverte d'abord dans <i>Les Indes Noires</i> de Jules Verne). J'ai d'abord cru que c'était un hibou, aussi il a des oreilles et j'en parle au masculin. Le mien a été conçu pour le vol de nuit avec comme impératifs : blanc pour être bien vu, et léger car le vent la nuit est souvent limité.</p>
+  <figure class="side-fig"><button data-cap="Le Harfang en salle."><img src="img/harf-2.jpg" alt="Le Harfang en vol dans un gymnase"></button></figure>
+  <p>Le corps est assez large et procure une bonne part de la portance. La tête, en avant du longeron, assure l'équilibre longitudinal. L'aile forme un peu de lobe comme un delta monofil. La structure est formée d'un tube central de 5,5 dans lequel est emmanché du 3 pour les bouts d'aile (j'avais d'abord mis un grand tube de 4 tout du long, mais il souffrait trop dans la courbure). Un embout central en alu courbé donne le dièdre, contrairement à ce que j'ai conseillé pour l'Oiseau bleu, mais ici le faible vent conseillé et le lobe des ailes qui laisse passer les surventes permettent de rester léger.</p>
+  <p>Pour des détails et le plan, lisez l'article <span class="missing" title="Article non présent dans la copie de 2004">« Le Harfang »</span>.</p>
+  <div class="clear"></div>
+  <figure class="side-fig left"><button data-cap="Le Harfang en indoor."><img src="img/harf-3.jpg" alt="Maxime faisant voler le Harfang en salle"></button></figure>
+  <p>Pour faire de l'indoor, j'ai récemment changé l'armature pour du 4 au centre (avec un raccord de 4), dans lequel est emmanché du 2 pour les bouts d'ailes. Le réglage est aussi moins cabreur (moins cambré). Cela fait un oiseau volable mais il lui faut quand même un peu de place et c'est parfois dur de s'en faire au milieu des pilotables rapides…</p>
+  <div class="clear"></div>
+
+  <h2>La Sterne</h2>
+  <figure class="side-fig"><button data-cap="La Sterne en vol."><img src="img/sterne-1.jpg" alt="La Sterne en vol"></button></figure>
+  <p>La Sterne a été un essai dérivé des deltas monofils : le longeron externe devait être libre et trouver sa place sous les efforts aérodynamiques. Mais je le voulais courbe par souci « bio ». C'était en fait un peu contradictoire car pour courber il faut tendre et le longeron n'est plus libre. J'ai dû rigidifier le tout par des tendeurs allant vers le nez. Je comptais un peu sur la queue très longue pour stabiliser le total.</p>
+  <div class="clear"></div>
+  <figure class="side-fig left"><button data-cap="La Sterne, vue de près en vol."><img src="img/sterne-2.jpg" alt="La Sterne en vol, détail"></button></figure>
+  <p>En final, la Sterne ne vole pas mal, mais la symétrie est difficile à obtenir. Curieusement, elle n'est stable qu'avec un angle très fort. Je suppose que la queue n'est efficace qu'avec une forte incidence et que les lobes dont le creusement engendre une dérive centrale doivent être bien formés.</p>
+  <p>La sterne supporte des vents assez forts (force&nbsp;5 environ) et son envergure limitée en fait malgré ces conditions un cerf-volant reposant et incassable.</p>
+  <div class="clear"></div>
+</article>
+
+<!-- ============ OISEAU LIGHT / ROKAKKU ============ -->
+<article class="page" data-page="oiseau-light" data-title="Oiseau Light, Rokakku" hidden>
+  <p class="kicker">Premiers cerfs-volants</p>
+  <h1>L'Oiseau Light</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/light.html</p>
+  <figure class="side-fig left"><button data-cap="L'Oiseau Light, 3,60 m d'envergure en carbone 4, déco inspirée d'un râle d'eau sud-américain."><img src="img/light-1.jpg" alt="L'Oiseau Light en vol"></button></figure>
+  <p>Pour pouvoir voler par tout petit temps, l'Oiseau Light est construit en carbone&nbsp;4 mais a pourtant une envergure de 3,60&nbsp;m. La déco est basée sur un râle d'eau sud-américain, mais qui n'a pas du tout cette forme. Celle-ci n'est d'ailleurs pas esthétiquement très satisfaisante, la partie extérieure de l'aile ayant un bord d'attaque en partie concave alors qu'il devrait être convexe… Ah, les contraintes techniques… Pour le <a href="#spiralier-messager">Spiralier</a> (voir plus loin), j'ai fait autrement.</p>
+  <div class="clear"></div>
+  <figure class="side-fig"><button data-cap="L'Oiseau Light : mât central et haubans."><img src="img/light-2.jpg" alt="L'Oiseau Light vu de dessous, mât et haubans"></button></figure>
+  <p>L'Oiseau Light est un cerf-volant simple, basé si on veut sur un Eddy très élargi et pas mal découpé. Un petit mât central et des haubans maintiennent d'une part le dièdre, d'autre part la courbure longitudinale qui empêche l'oiseau de passer au-dessus de la tête. Pour des détails, lisez l'article <span class="missing" title="Article non présent dans la copie de 2004">« L'Oiseau Light »</span>.</p>
+  <div class="clear"></div>
+
+  <h2>Le Rokakku</h2>
+  <figure class="side-fig left"><button data-cap="Le rokakku de combat, décoré d'un oiseau agressif."><img src="img/rokakku.jpg" alt="Rokakku décoré d'un oiseau"></button></figure>
+  <p>Mon rokakku a été un passage obligé pour pouvoir participer aux combats de rokakkus. Il fait suite à mon précédent (qui avait été construit pour rechercher l'Oiseau Light dans un arbre du Bois de Boulogne où il était resté une semaine), et qui a été piqué sur un terrain de la région parisienne… Celui-ci fait environ 1&nbsp;m. Les transversales sont en carbone&nbsp;4, la longi en carbone&nbsp;4 ou&nbsp;5,5 selon le vent. Il est décoré d'un oiseau (oui, encore) très agressif pour impressionner les adversaires, mais ça ne les démoralise pas beaucoup ! Avec lui, j'ai quand même gagné plusieurs coupes et une montre.</p>
+  <div class="clear"></div>
+</article>
+
+<!-- ============ ALBATROS ============ -->
+<article class="page" data-page="albatros" data-title="L'Albatros" hidden>
+  <p class="kicker">Cerfs-volants récents</p>
+  <h1>L'Albatros</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/alb.html</p>
+  <figure><button data-cap="Avec mon jouet au milieu des (autres) enfants."><img src="img/alb-1.jpg" alt="L'Albatros au sol sur une plage, entouré de promeneurs"></button><figcaption>Avec mon jouet au milieu des (autres) enfants</figcaption></figure>
+  <p>Un jour, j'ai décidé de faire un grand cerf-volant… Dans ce monde, les petits, même plus beaux ou plus techniques ne sont en effet pas estimés à leur valeur. Et puis un grand cerf-volant, c'est jouissif à faire voler, ça tire, c'est un truc d'homme. Comme je ne voulais pas couper des mètres de tissu pour un machin qui ne volerait pas, j'ai pris modèle sur <a href="#oiseau-bleu">l'Oiseau bleu</a>. J'ai gardé les principes de l'armature et du « gréement », de la flèche inverse, de la forme des bouts d'aile mais j'ai quand même changé beaucoup de choses ! Évidemment, j'ai doublé les dimensions, mais j'ai diminué un peu l'allongement relatif, pour ne pas avoir trop de problèmes de torsion. J'ai essayé que toute la toile soit bien tendue, pour que la forme ne change pas selon la force du vent.</p>
+  <figure class="side-fig"><button data-cap="L'Albatros en vol : 6 m d'envergure, il paraît plus petit en l'air."><img src="img/alb-2.jpg" alt="L'Albatros en vol, petit dans le ciel"></button></figure>
+  <p>Quand je l'ai mis en vol pour la première fois, je l'ai trouvé beau (forcément) mais j'ai été un peu déçu : il paraît plus petit en vol qu'au sol. Les tests que je fais régulièrement auprès du public donnent des estimations variant entre 2 et 4&nbsp;m, et pourtant il en fait 6. J'excepte la charmante demoiselle qui m'a dit « 12 mètres »… Il s'agit sans doute d'un problème de taille relative du corps et de l'aile. J'ai essayé (en dessin) un corps plus gros, mais ça ne me plaît guère, alors je persiste et assume. Curieusement, quand il est très haut (200&nbsp;m de fil) on ressent mieux qu'entre 10&nbsp;m et 100&nbsp;m qu'il est de taille importante.</p>
+  <div class="clear"></div>
+  <figure class="side-fig left"><button data-cap="L'Albatros en vol, dièdre faible."><img src="img/alb-3.jpg" alt="L'Albatros en vol au-dessus de la plage"></button></figure>
+  <p>Le dièdre est assez faible et il vole mieux comme ça. Évidemment, par vent fort, le dièdre augmente mais les ailes se mettent à plat grâce à un dispositif non breveté. Du coup, j'ai volé jusqu'à force&nbsp;7 (et peut-être plus, j'ai pas mesuré là-haut) sans casser. Comme toujours, c'est au contact de la planète que l'on casse le plus souvent : avec peu de fil, les oscillations ne s'amortissent pas voire s'amplifient, et la chute sur la pointe d'aile est mortelle.</p>
+  <div class="clear"></div>
+  <figure class="side-fig"><button data-cap="L'Albatros, stable dès 20 m d'altitude."><img src="img/alb-4.jpg" alt="L'Albatros en vol stable"></button></figure>
+  <p>Sinon, dès 20&nbsp;m d'altitude, le vol est bien stable. Il est même encore plus stable par vent fort où il est carrément rivé sur place. Évidemment, dans les turbulences, il suit le mouvement, mais la longueur de l'aile lui donne une inertie majestueuse.</p>
+  <div class="clear"></div>
+  <figure class="side-fig left"><button data-cap="Détail de structure : deux cannes à pêche."><img src="img/alb-structure.jpg" alt="L'Albatros posé dans l'herbe, détail de structure"></button><figcaption>Détail de structure</figcaption></figure>
+  <p>Structuré par 2 cannes à pêche, il pèse 800&nbsp;g et vole de force&nbsp;1 à force&nbsp;7. Il y a juste un petit réglage de la bride arrière à faire pour éviter qu'il ne tire trop fort par baston, mais ça ne l'empêche pas de voler si le réglage a été oublié (mais la ligne peut casser, expériences trop vécues). À part ça, à pratiquer le vent fort pendant quelques années, les ourlets commencent à s'effilocher, les coutures à craquer, les fourreaux se percent. Le tissu est devenu tout léger, soyeux et même poreux, il serait temps de le changer, ainsi d'ailleurs que les cannes et les brides…</p>
+  <p>Pour des détails techniques, voir l'article <span class="missing" title="Article non présent dans la copie de 2004">« L'Albatros »</span>.</p>
+  <div class="clear"></div>
+  <figure><button data-cap="Au revoir…"><img src="img/alb-revoir.jpg" alt="L'Albatros vu de haut au-dessus de la mer"></button><figcaption><i>Au revoir…</i></figcaption></figure>
+</article>
+
+<!-- ============ SPIRALIER / MESSAGER ============ -->
+<article class="page" data-page="spiralier-messager" data-title="Spiralier, Messager" hidden>
+  <p class="kicker">Cerfs-volants récents</p>
+  <h1>Le Spiralier</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/spir.html</p>
+  <figure class="side-fig"><button data-cap="Le Spiralier en vol."><img src="img/spir-1.jpg" alt="Le Spiralier en vol"></button></figure>
+  <p>Le Spiralier est né de l'idée de faire un cerf-volant pour vent léger, mais en éliminant les défauts esthétiques de l'<a href="#oiseau-light">Oiseau Light</a>. Initialement, je l'ai conçu pour qu'il puisse spiraler en arrivant en haut de la fenêtre. Il a marché un peu comme cela (difficilement) mais il fallait beaucoup s'employer à ramener, puis relâcher du fil rapidement et suffisamment. Faute de quoi, dès que le fil se retendait, le Spiralier s'éloignait tout droit sous le vent et se plantait, ce qui m'a vite lassé. Je n'ai gardé que le nom.</p>
+  <div class="clear"></div>
+  <figure class="side-fig left"><button data-cap="Le Spiralier : corps et longerons en carbone."><img src="img/spir-2.jpg" alt="Le Spiralier en vol, vu de dessous"></button></figure>
+  <p>Il est un peu plus grand et nettement plus lourd que l'oiseau light, mais me plaît beaucoup plus esthétiquement. La structure carbone est constituée d'un corps, et de 2 longerons d'aile qui poussent sur les tubes de bord d'attaque. Une barre transverse avec son tendeur vertical limite le dièdre. Un système de tendeurs en double&nbsp;Y sur le dessus permet de régler et de bien garder en vol la même incidence sur les deux ailes.</p>
+  <div class="clear"></div>
+  <h2>Mon Messager</h2>
+  <figure class="side-fig left"><button data-cap="Le Messager en forme d'oiseau, traversé par le fil."><img src="img/messager.jpg" alt="Le Messager en forme d'oiseau sur la ligne"></button></figure>
+  <p>Ce Messager (en forme d'oiseau, oui) est assez particulier. Par exemple, le fil le traverse, et il est verrouillé par un crochet en haut et non par une coulisse qui actionne un crochet en bas. Il marche bien comme ça (enfin, ça dépend un peu du vent), mais ces différences ont surtout une raison que j'expliquerai plus tard si j'arrive à faire ce que je veux. Mais je ne tiens pas à me mettre la pression et à me voir demander « Mais, Maxime, il ne fait pas comme tu as dit sur ton site ? ». De toutes façons, mes essais ont déjà montré que des modifs profondes seront nécessaires. À suivre, donc…</p>
+  <div class="clear"></div>
+</article>
+
+<!-- ============ MEGOEL ============ -->
+<article class="page" data-page="megoel" data-title="Megoel" hidden>
+  <p class="kicker">Cerfs-volants récents</p>
+  <h1>Megoel</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/meg.html</p>
+  <figure><button data-cap="Megoel, le Méga-Goéland de 8 m d'envergure."><img src="img/meg-1.jpg" alt="Megoel en vol"></button></figure>
+  <p>Comme j'avais été très content de l'<a href="#albatros">Albatros</a> (voir plus haut), j'ai décidé de faire encore plus grand pour voir si je trouverais une limite. Pour ne pas partir dans le bleu, j'ai transformé le <a href="#spiralier-messager">Spiralier</a> en prototype de ce que j'appelais alors « la mouette à coudes » (alors que l'aile de l'albatros est droite, sans coudes). Après des essais à peu près concluants (mais me laissant augurer que j'aurais encore du pain sur la planche), je me suis lancé dans un cerf-volant de 8&nbsp;m d'envergure, un Méga-Goéland ou Megoel en abrégé. Il me plaît bien comme il est, même s'il était plutôt instable au départ.</p>
+  <figure class="side-fig"><button data-cap="Premier vol de nuit à Châtelaillon."><img src="img/meg-2.jpg" alt="Megoel en vol, de nuit"></button></figure>
+  <p>À Châtelaillon, j'ai volé pour la première fois, embrayant sur un vol de nuit mouvementé où je n'avais pas un poil de sec. La fenêtre de stabilité transversale à cette époque était en effet très étroite, et il me fallait courir vers la droite ou la gauche dès que le cerf-volant en sortait. De jour, c'était pareil, mais on voit mieux et on est moins serré : tout le monde ne se jette pas dans le feu des projecteurs !</p>
+  <div class="clear"></div>
+  <figure class="side-fig left"><button data-cap="Megoel au concours des fées."><img src="img/meg-3.jpg" alt="Maxime présentant Megoel au sol"></button></figure>
+  <p>J'ai quand même présenté Megoel au concours des fées pour animer la chose. Mais on m'a jugé très « hors sujet » ce qui ne m'a pas vraiment étonné !</p>
+  <div class="clear"></div>
+  <figure class="side-fig"><button data-cap="Stabilité améliorée : on peut lui caresser la tête."><img src="img/meg-4.jpg" alt="Maxime tenant Megoel par la tête"></button></figure>
+  <p>Depuis, j'ai amélioré la stabilité, transversale comme longitudinale. Je peux lui caresser la tête sans risque.</p>
+  <div class="clear"></div>
+  <figure class="side-fig left"><button data-cap="Megoel à une dizaine de mètres, au-dessus des spectateurs."><img src="img/meg-5.jpg" alt="Megoel en vol bas au-dessus d'un spectateur"></button></figure>
+  <p>À une dizaine de mètres d'altitude, on peut jouer avec par vent faible en rendant brusquement la main. Megoel part alors en piqué sur les innocents spectateurs, ce qui est interdit par tous les règlements. Heureusement, il suffit de tirer voire de résister sur la ligne pour qu'il reprenne un angle d'honnête cerf-volant et remonte.</p>
+  <div class="clear"></div>
+  <figure class="side-fig"><button data-cap="Construction : armature en cannes à pêche, 8 m à monter dans l'appartement."><img src="img/meg-6.jpg" alt="Megoel en construction dans l'appartement"></button></figure>
+  <p>La construction d'un engin de 8&nbsp;m n'est quand même pas facile. La structure est en canne à pêche. Pour réaliser une armature de cette taille, il y a bien un moment où il faut taper dans le dur et monter la tête. Chez moi, 8&nbsp;m ça passe seulement en ouvrant la porte de la salle de bain. Donc, si vous n'avez pas de salle de bain, ne construisez pas de Megoel !</p>
+  <div class="clear"></div>
+  <figure class="side-fig"><button data-cap="La tête et le bec en mousse Bultex sur carcasse en scions de cannes à pêche."><img src="img/meg-7.jpg" alt="Tête de Megoel en mousse"></button></figure>
+  <p>Je voulais un corps en 3D sur une carcasse en scions de cannes à pêche. La tête et le bec (alouette…) sont en mousse, mais Bultex svp, afin de constituer facilement (plus qu'une tête de dragon chinois) un volume pas trop gênant à transporter et pas dangereux pour son maître ou pour les spectateurs innocents dont je parlais plus haut. J'ai seulement enveloppé le total dans un sac plastique étanche pour éviter que la tête ne pèse 3&nbsp;kg par temps de pluie. Même le bec est en mousse, le seul problème étant que tout le monde veut le toucher pour voir s'il est dangereux. Il faudra que je le lave souvent.</p>
+  <div class="clear"></div>
+</article>
+
+<!-- ============ INDOOR ============ -->
+<article class="page" data-page="indoor" data-title="Indoor" hidden>
+  <p class="kicker">Cerfs-volants récents</p>
+  <h1>Réalisations indoor</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/indoor.html</p>
+  <figure><button data-cap="Vol en salle."><img src="img/indoor-1.jpg" alt="Oiseau indoor en vol dans une salle sombre"></button></figure>
+  <h2>Bambou Bird</h2>
+  <figure class="side-fig left"><button data-cap="Bambou Bird : bambou refendu et papier japonais."><img src="img/bambou-1.jpg" alt="Bambou Bird posé au sol"></button></figure>
+  <p>Pour me reposer du gigantisme (je sais, il y a bien plus grand…) et occuper la saison d'hiver 2003/2004, je me suis un peu lancé dans l'Indoor. Outre le <a href="#harfang-sterne">Harfang</a> allégé, j'ai plongé dans la taille du bambou refendu pour construire un oiseau léger entoilé en papier japonais. Je pourrais en fait le faire encore plus léger, comme les « cacahuètes », modèles réduits à hélice pour le vol indoor, mais ça devient trop fragile, soit pour le transport, soit quand il est emporté par un pilotable qui passe, soit quand une bonne âme le ramasse par la pointe de l'aile pour vous le remettre.</p>
+  <div class="clear"></div>
+  <figure class="side-fig"><button data-cap="Bambou Bird en vol."><img src="img/bambou-2.jpg" alt="Bambou Bird en vol en salle"></button></figure>
+  <p>Actuellement, le diamètre du longeron en bout d'aile est de 1&nbsp;mm. J'ai quand même voulu le faire démontable : ce longeron est en 3 parties qui s'assemblent près du centre mais se démontent pour permettre le transport de l'oiseau dans une chemise en carton A4.</p>
+  <div class="clear"></div>
+  <h2>Manta</h2>
+  <figure class="side-fig left"><button data-cap="Manta : bambou et plastique."><img src="img/manta.jpg" alt="Manta, cerf-volant indoor triangulaire"></button></figure>
+  <p>Restons dans l'indoor : Manta offre plus de surface et est plus facile à piloter. L'armature est toujours en bambou, mais la toile est en plastique (provisoirement ?). Si j'ai le temps, je la réaliserai nettement plus grande, encore en bambou, mais entoilée en spi. L'arête ventrale et la queue rendent son pilotage très aisé : dès qu'on tire, elle vire vers vous.</p>
+  <div class="clear"></div>
+</article>
+
+<!-- ============ ARTICLE JONATHAN ============ -->
+<article class="page" data-page="art-jonathan" data-title="Allongement cinq, ou « Jonathan »" hidden>
+  <p class="kicker">Articles, plans</p>
+  <h1>Allongement Cinq, ou « Jonathan »</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/ArtiJon.html</p>
+  <p>Je suis entré dans le monde du cerf-volant à l'été 1994, avec un jouet dont on m'a fait cadeau, un delta mal conçu et mal réalisé, de quoi dégoûter un novice. J'ai acheté aussitôt, pour voir vraiment, un delta Décathlon premier prix, qui marchait bien, quoiqu'un peu lourd pour les vents évanescents du bois de Boulogne. Après avoir fait le tour de ses réglages et de ses possibilités, l'envie m'a saisi de construire mon modèle. J'avais mis la cravate dans l'engrenage !</p>
+  <p>J'ai choisi les armatures carbone, faut ce qu'il faut pour être léger, et le mylar des couvertures de survie, qui convenait bien à des essais et des modifications (assemblage par scotch). Ça se déchirait bien un peu de temps en temps, mais pas tant qu'on pourrait croire, surtout si on ne laisse pas de bord libre (toujours un nerf ou au moins un « ourlet »). J'ai d'abord fait un delta, qui ne marchait pas mal, puis j'ai voulu changer de forme, plutôt que de toujours conjuguer le delta (ne vous lassez pas, on arrive à Jonathan bientôt). Mes connaissances en aérodynamique m'avaient appris que le delta n'est pas une forme terrible pour l'aérodynamique sauf en supersonique, mais les CV supersoniques sont rares. J'ai donc voulu faire voler une forme plus proche d'une aile, plus satisfaisante pour mon esprit cartésien, mais je ne savais pas dans quoi je me lançais ! Jonathan a donc une envergure de 2,40&nbsp;m, pour une longueur de 25&nbsp;cm, hors la tête et la queue qui ne sont là qu'à titre décoratif. D'où le titre, l'allongement étant le rapport, pour <u>une</u> aile, entre l'envergure et la profondeur. Vous voyez, on y est arrivé.</p>
+  <figure class="diagram"><button data-cap="Plan : aile en couverture de survie, nerf de bord de fuite, tendeur arrière de l'aile, bouts d'aile en jonc courbé, quille et bride."><img src="img/artijon-plan1.jpg" alt="Plan de l'aile de Jonathan avec quille et bride"></button><figcaption>Aile, bouts d'aile en jonc, quille et départ de bride.</figcaption></figure>
+  <p>J'avais d'abord fait les bouts d'ailes avec des tubes rigides, ça marchait bien mais ça n'était pas très « bio ». Je suis venu aux bouts courbés pour l'esthétique, et au spi pour la solidité, et ça marche aussi bien.</p>
+  <figure class="diagram"><button data-cap="Structure : tête, queue, entretoise verticale entre tube de fuselage et longeron transversal, tenue du nerf de bord d'attaque."><img src="img/artijon-structure.jpg" alt="Vue éclatée de la structure de Jonathan"></button><figcaption>Structure : fuselage, longeron transversal et entretoise.</figcaption></figure>
+  <p>La forme longitudinale en dièdre, créée par l'entretoise entre le tube de fuselage et le longeron transversal est nécessaire pour la stabilité longitudinale. Si elle n'est pas mise, ou trop courte, Jon monte bien, mais arrivé en haut de fenêtre, il plane vers vous comme un animal sympathique mais « brave » ! De même, sur les bords de fenêtre, ou dans les piqués, il se dévente et part en brioche.</p>
+  <figure class="diagram"><button data-cap="Demi-plan général : tubes carbone 5,5 mm, jonc carbone 2 mm, coutures des sections."><img src="img/artijon-demiplan.jpg" alt="Demi-plan général de Jonathan avec cotes"></button><figcaption>Demi-plan général.</figcaption></figure>
+  <p>J'ai placé le longeron assez à l'arrière, car c'est surtout la partie de l'aile en avant du longeron qui est porteuse. Cette disposition amène toutefois un défaut : par grand vent, les ailes se courbent vers l'avant, leur bord d'attaque faisant une poche, et j'ai même vu une fois Jon partir comme cela plein pot en marche arrière. Sans aller à cet extrême, la marche devient irrégulière, et le pilotage s'apparente plus à de la survie. Pour contrer cela, je fais actuellement des essais sur une forme modifiée en avançant le longeron transversal, mais ça n'est pas encore au point, et je n'en parle pas. Si le vent est trop fort, eh ben ne volez pas ! (on peut peut-être essayer alors d'enfiler des baguettes dans le bord d'attaque des ailes ? je n'ai pas testé).</p>
+  <figure class="diagram"><button data-cap="Principe de la bride et réalisation du palonnier : le nœud de force reçoit la somme des tractions, la différence actionne le gauchissement."><img src="img/artijon-bride.jpg" alt="Principe de la bride et détail du palonnier"></button><figcaption>Principe de la bride, réalisation du palonnier.</figcaption></figure>
+  <p>Le bridage est spécial, parce qu'un bridage normal ne marche pas : quand on tire à droite, ça aurait plutôt tendance à tourner à gauche, mais ça dépend de l'incidence et de la force du vent ! Avec le bridage indiqué ça marche bien. Ça s'emmêle un peu quand on replie, il faut faire attention, sinon le dépliage suivant peut être long ! Au fait, pour replier, on enlève les 2 longerons des ailes, on plie celles-ci l'une sur l'autre, et on enroule le total autour des longerons en partant du corps et en couchant in fine les bouts d'aile en long, ce qui fait un très petit paquet.</p>
+
+  <h2>Réglages</h2>
+  <figure class="diagram"><button data-cap="Points de réglage 1 à 8 de Jonathan ; BA bord d'attaque, BF bord de fuite."><img src="img/artijon-reglages.jpg" alt="Schéma des points de réglage numérotés de 1 à 8"></button><figcaption>Points de réglage 1 à 8.</figcaption></figure>
+  <ol class="steps">
+    <li>Avant montage, tendre les nerfs des joncs de bout d'aile pour qu'il y ait environ 4 à 5&nbsp;cm de corde.</li>
+    <li>Tendre les nerfs de BA jusqu'à ce que les BA aient une courbure légèrement concave.</li>
+    <li>Tendre les nerfs de BF jusqu'à ce que les nerfs de tension (1) des joncs de bout d'aile mollissent juste.</li>
+    <li>Régler la longueur du tendeur central pour que les tendeurs avant de bout d'aile soient détendus de qques cm (donnera un peu de dièdre en vol). Pas trop, sinon l'incidence des bouts d'aile est trop forte.</li>
+    <li>Positionner les tendeurs arrières au 1/3 arrière des nerfs de tension des joncs.</li>
+    <li>Régler les tendeurs arrières bien détendus, pour que le bout d'aile ait l'incidence minimale.</li>
+    <li>Régler la différence entre les tendeurs arrières pour que la tension se répartisse également sur les 2.</li>
+    <li>Régler l'incidence centrale, à une valeur assez faible pour que Jon avance. Cependant il marche bien si cette incidence est supérieure à celle des bouts d'ailes. C'est pourquoi il ne faut pas trop tendre les tendeurs externes arrières.</li>
+  </ol>
+  <p class="callout">NB : étant donnée la faible longueur, par rapport à un delta, les réglages longitudinaux sont très fins. Procéder par cm ou ½&nbsp;cm.</p>
+  <div class="diag">
+    <p><strong>Si Jon se dévente en haut ou en bord de fenêtre :</strong></p>
+    <p>→ l'entretoise centrale est mal ajustée ou trop courte, il n'y a alors pas assez de dièdre longitudinal, donc de stabilité longitudinale ;</p>
+    <p>→ il n'y a pas assez d'incidence centrale (déplacer vers l'AR en 8)</p>
+    <p>(on peut essayer d'observer sur le bord de fenêtre qui donne le meilleur éclairage, quelle est la partie, centre ou extrémités, qui dévente d'abord).</p>
+  </div>
+  <div class="diag">
+    <p><strong>Si Jon a du mal à décoller ou reste au ras du sol :</strong></p>
+    <p>→ les tendeurs arrière sont trop tendus (allonger 6)</p>
+    <p>→ les tendeurs avant sont trop détendus (allonger en 4, oblige en général à allonger en 6)</p>
+    <p>→ si les précédents sont bien, diminuer l'incidence centrale (vers AV en 8)</p>
+  </div>
+  <div class="diag">
+    <p><strong>S'il n'y a pas assez d'autorité de pilotage :</strong></p>
+    <p>→ si c'est par vent faible, essayez en tirant, au lieu de simplement résister. Si ça ne fait rien, retendre les tendeurs arrières qui ont trop de mou (régler 6). On peut tendre jusqu'à observer que cela change l'incidence (on a alors du mal à décoller, redétendre un peu).</p>
+  </div>
+  <p>Si vous entreprenez la construction, sachez quand-même que ce n'est pas un cerf-volant facile. Il est sensible aux réglages, qui sont nombreux. C'est passionnant pour les bricoleurs et les analystes, mais les essais sont quelquefois décevants. Partez des conseils indiqués sur les plans, mais vous pouvez toujours me contacter si vous vous cognez la tête contre les murs (vous pouvez me contacter dans tous les cas, ça me fera aussi plaisir si tout marche bien !). Sachez aussi que le vol n'est pas celui d'un delta. Jon n'est pas rapide, il est sensible aux rafales et à la vitesse, il prend facilement du dérapage, ce qui rend difficile l'exécution d'un cercle rond (non, « cercle rond » n'est pas un pléonasme, allez sur n'importe quel spot de CV et regardez, vous verrez des cercles de toutes les formes !), et vous ne ferez pas d'axels ! Par contre, il a un taux de rotation important, bien autour de son centre ; il fait des stops facilement (un peu trop, d'ailleurs, et le problème est plutôt de maintenir la vitesse au cours des manœuvres) ; il est plutôt auto-serreur, et il faut contrer pour sortir de virage. Il est assez léger pour voler par petit vent, mais quand même pas par vent nul, la surface n'est pas bien grande.</p>
+  <p>Pour les monofilistes, j'ai déjà fait voler Jon en stationnaire, en diminuant l'incidence. Il a tendance à partir en grandes oscillations transversales divergentes, si le vent faiblit. Je ne suis pas spécialiste du domaine, je suppose qu'en augmentant le dièdre ça irait mieux. Informez-moi, si vous travaillez ça. Un Jon de 5 mètres d'envergure serait splendide ! (moi ? je ne pousse personne, je sème juste une graine au cas où…).</p>
+  <p>En tous cas, recopieurs scrupuleux ou déviateurs de génie (je recommande de commencer par la première approche, vous verrez bien s'il vous reste des réserves de génie), sachez que si vous vous lancez dans le domaine, vous n'êtes pas près d'en avoir fait le tour ! Je vous souhaite de toute façon du bon vent (pour le plaisir, mais aussi parce qu'un bon vent, moyen et régulier, ça facilite les essais et le réglage) !</p>
+  <p class="sig">Amitiés à tous, Maxime ROUSSELLE</p>
+</article>
+
+<!-- ============ ARTICLE KING ============ -->
+<article class="page" data-page="art-king" data-title="Changez de concept avec le « King »" hidden>
+  <p class="kicker">Articles, plans</p>
+  <h1>Changez de concept avec le « King »</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/ArtiKing.html</p>
+  <p>Vous vous souvenez peut-être de <a href="#art-jonathan">Jonathan</a>, ce goéland pilotable d'allongement 5, dont une photo est parue dans la revue du NCB, il y a un moment. Sur le même principe, j'ai voulu continuer dans la lignée des oiseaux pilotables. Autant en effet je salue l'imagination qui règne dans le monde des monofils, toujours divers de formes et de dessins, avec des manches à air, des messagers, des roues qui tournent, du patchwork, de la peinture, de la broderie, des transparences, autant le monde des pilotables tourne autour des deltas, un peu plus plats, un peu moins plats, un peu plus ouverts ou un peu plus fermés, avec les côtés droits ou courbes etc., ce qui constitue quand même un domaine assez limité.</p>
+  <p>Ce manque relatif de nouveauté est sans doute lié à la difficulté technique de faire voler ces machins, de pouvoir les piloter, et à leur maniabilité qui est différente de celle du delta (les axelmaniaques n'y trouveront pas leur bonheur). Le bridage doit être complètement différent de celui d'un delta : pour des appareils à allongement assez important, compte tenu de leur faible longueur qui n'offre pas de bras de levier suffisant, la tête, la queue ou la dérive ont peu d'influence : le seul moyen de les piloter est de torturer le bout des ailes, loin du centre. D'autre part on rencontre des problèmes de dérapage : la forme en gouttière des ailes fait que ces oiseaux se déplacent aussi volontiers en travers qu'en long ! Suite à ces questions, j'ai commencé à chercher si on ne pourrait pas piloter un oiseau grâce à des rémiges en bout d'aile commandées individuellement, et c'est ce qui explique (en partie) la forme de King. Mais j'ai abandonné le procédé faute de courage pour faire la bride (un ou deux petits fils à chaque plume…), faire des essais, modifier, re-régler… Les rémiges sont restées, la commande est plus globale.</p>
+  <figure class="diagram"><button data-cap="Plan du King : demi-aile cotée de 0 à 100 cm, profil (tête, aile, queue, quille) et silhouette générale."><img src="img/artiking-plan.jpg" alt="Plan coté du King, demi-aile et silhouette"></button><figcaption>Plan général du King.</figcaption></figure>
+  <p>J'ai donc pris comme modèle un aigle royal, qui a des rémiges bien développées, et voilà pourquoi il s'appelle King. L'interprétation est quand même assez libre, et une aiglonne n'y reconnaîtrait sans doute pas son petit ! En tous cas il n'effraye pas des masses les autres oiseaux.</p>
+  <p>Pour les rémiges, il faut faire un ourlet au bord d'attaque de chacune, mais <u>pas au bord de fuite</u>, même pour la plus arrière, où cela serait tentant pour passer le nerf. La rémige peut ainsi « se prêter », et se mettre dans le vent, et pas en travers comme un parachute. L'ourlet d'extrémité, autour du jonc, est aussi important, il ne doit pas tendre le bord de fuite. La rémige de tête doit avoir un gros ourlet pour passer le tube de 5,5&nbsp;mm de l'aile. Mettre un renfort de dacron au bout, mais laisser le coin libre, c'est la rémige elle-même qui tiendra la tension transversale. Cela permet, au repliage, de supprimer complètement cette tension quand on défait le tendeur, et de sortir facilement le tube du raccord central. De toute façon, la première fois que vous toucherez du coin de l'aile, il y aurait un trou, alors autant faire un trou propre (et celui qui dit qu'il ne se plante jamais est un sale menteur).</p>
+  <figure class="diagram"><button data-cap="Structure du King : tubes carbone 5,5, joncs, et détail A de l'extrémité d'aile avec renfort dacron et tendeur de tête."><img src="img/artiking-structure.jpg" alt="Vue de la structure du King et détail A de l'extrémité d'aile"></button><figcaption>Structure et détail A de l'extrémité d'aile.</figcaption></figure>
+  <p>À propos de nerf de bord de fuite, je ne suis pas sûr qu'il soit bien utile, mais il consolide un peu ce bord où sont quand même attachés les tirants arrière, et il l'empêche peut-être un peu de battre. Ne pas le tendre cependant, sinon les rémiges mollissent d'autant.</p>
+  <p>Pour les durits enfilées sur le tube d'aile et supportant la tension du hauban qui va au bec, j'ai mis une goutte de cyano, sinon elles se déplacent, l'aile prend une position un peu plus arrière, la toile fait des plis au centre, et en plus le bout d'aile n'est plus tendu. Tout cela est très vilain, King n'aime pas ça, et cet animal noble fait alors exprès de mal voler.</p>
+  <figure class="diagram"><button data-cap="Bride du King, palonnier en tube de 4 mm de 40 cm, avec ses cinq points de réglage."><img src="img/artiking-bride.jpg" alt="Schéma de la bride du King avec points de réglage"></button><figcaption>Bride, palonnier en tube de 4&nbsp;mm de 40&nbsp;cm.</figcaption></figure>
+  <ol class="steps">
+    <li>réglage incidence centrale</li>
+    <li>réglage dièdre transversal</li>
+    <li>réglage incidence bouts d'ailes</li>
+    <li>réglage rapport entre actions bout d'aile et mi-aile</li>
+    <li>réglage incidence minimale aile avançante (voir détail A sur planche précédente)</li>
+  </ol>
+  <p>La bride s'emmêle facilement, et il vaut mieux prendre des précautions en la rangeant. Ne vous laissez pas rebuter par les multiples réglages indiqués. La plupart sont seulement des facilités de construction, à ne plus toucher ensuite. King est de toute façon assez simple et tolérant. Le pilotage est assez facile. King n'est pas très rapide, car les rémiges portent peut-être un peu, mais elles ont en tous cas un solide effet d'aérofrein. Vous pourrez faire du ballet. King encaisse les rafales par sa souplesse, et supporte assez bien les vents forts. Je vous en souhaite, mais n'exagérez rien, la souplesse a des limites, et le pilotage n'est plus très intéressant quand le King ressemble à une cocotte en papier !</p>
+  <p class="sig">Amitiés à tous, à bientôt sur un spot… Maxime ROUSSELLE</p>
+</article>
+
+<!-- ============ ARTICLE MARTINET ============ -->
+<article class="page" data-page="art-martinet" data-title="Hirondelle ? non, Martinet" hidden>
+  <p class="kicker">Articles, plans</p>
+  <h1>Hirondelle ? non, Martinet.</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/ArtiMartin.html</p>
+  <p>Pour ceux qui aiment les oiseaux mais qui ont trouvé que Jonathan le goéland (<i>Le Lucane</i> 76) ou King l'aigle (<i>Le Lucane</i> 77) étaient bien difficiles à réaliser ou trop complexes à régler, voici Martin, le martinet. Il est simple à construire, simple à régler, et simple à piloter. Allez, faites-vous plaisir !</p>
+  <p>La structure principale se compose d'un arc, démontable bien sûr pour vous éviter le transport sur la galerie… La partie médiane est un tube de 5,5&nbsp;mm en carbone. Pour les bouts d'aile, j'ai essayé avec du tube de 4, les 2 côtés ont explosé au premier vol ! J'ai donc mis un jonc de carbone 3 emboîté dans le tube central. Comme les tubes ne sont pas conçus pour résister à des contraintes de l'intérieur vers l'extérieur, il faut renforcer la zone où le jonc 3 s'emboîte par une surliure collée à la cyano pour assurer. Ne pas avoir peur aussi d'emboîter sur une bonne longueur (4&nbsp;cm).</p>
+  <figure class="diagram"><button data-cap="Plan du Martinet : vue de face (bride et whiskers), demi-plan coté de 0 à 100 cm, bridage et tendeur."><img src="img/artimartin-plan.jpg" alt="Plan coté du Martinet, vue de face et demi-plan"></button><figcaption>Vue de face et demi-plan coté.</figcaption></figure>
+  <p>L'arc est simplement enfilé dans l'ourlet avant. Pour le démontage, on défait une extrémité d'aile, on déboîte les joncs, et on fait coulisser le tube central pour dégager le point milieu, afin de pouvoir plier le tube contre le corps. Plus simple à faire qu'à expliquer…</p>
+  <p>Le bec est un petit fourreau conique en dacron. Pour soulager la tension de la tête, j'ai tendu une ficelle entre le centre de l'arc et la durit d'attache avant de bride. Sinon, le bec finit par se percer (surtout si on fait un atterrissage par planté de tête…) ou se découdre. Mettre un petit raidisseur dans l'ourlet de la tête pour la tenir en largeur.</p>
+  <figure class="diagram"><button data-cap="Détails du Martinet : jonction tube 5,5 / jonc 3, bout d'aile avec fourreau dacron, whiskers carbone 2 mm, raccord queue."><img src="img/artimartin-detail.jpg" alt="Détails de construction du Martinet"></button><figcaption>Jonction, bout d'aile, whiskers et queue.</figcaption></figure>
+  <p>Les wiskers sont bandés par un fil qui ne prend que 4/5 de l'aile pour ne pas trop la courber. Ils ne seraient pas nécessaires en vol rapide avec du vent (le creux se fait tout seul…). Mais à faible vent, ou faible vitesse (bord de fenêtre, stop), la maniabilité est directement fonction du creux que les wiskers maintiennent.</p>
+  <p>La queue est un peu chinoise. J'ai essayé diverses solutions (fourreaux, micro-durits…) pour les extrémités, qui doivent rester fines, mais ça s'use ou ça s'arrache. Finalement, j'ai un peu laissé dépasser les joncs au bout, et j'ai collé la toile sur le jonc à la cyano. Les puristes trouveront ça shocking, mais ça résiste à l'usure, et les joncs accrochent bien par terre quand on tire Martin sur le dos pour décoller. Il faut aussi coller sur le tube central le bout de durit qui sert de butée à l'avant de l'armature de la queue.</p>
+  <p>Le bridage est à peu près classique type delta.</p>
+  <p>L'arc ne permet pas de tendre très fort le bord de fuite, alors il vibre et Martin est un peu trop bruyant à mon goût, mais pas de façon gênante. On peut mettre un petit nerf dans le bord de fuite comme indiqué, ce qui diminue la vibration.</p>
+  <p>Au final, Martin est proche d'un delta et se manie comme lui. Mais sa souplesse ne lui permet pas des angles droits bien nets. Il est du type rapide, il ne faut pas s'endormir. Quand le vent force, les joncs se courbent et les rafales sont bien encaissées (essayé jusqu'à force&nbsp;5). Quand on tire sec, les joncs se courbent de même et on obtient des accélérations spectaculaires (et bruyantes…). En sens inverse, on peut faire des tortues, voire des yoyos. Les axels me semblent difficiles vue la souplesse. Je n'y arrive pas, mais un spécialiste à qui je l'avais prêté m'en a fait un, donc c'est possible.</p>
+  <p>La prochaine fois, je vous parlerai d'un croisement de goéland et de martinet qui promet bien… Cela paraît contre nature, mais dans le monde technico-poétique du cerf-volant, tout peut être fécond. À bientôt !</p>
+  <p class="sig">Maxime ROUSSELLE</p>
+  <h3 class="sub">Complément 2004</h3>
+  <ol class="steps ps">
+    <li>La version construite par les Cavaliers du Ciel est légèrement différente. Elle comporte un raccord central qui facilite le démontage, des petits embouts au bout de la queue pour assurer le collage et protéger de l'usure. L'emboîtage du 3 dans le 5,5 pour l'arc transversal est reforé car ça ne rentrait pas avec le 5,5 employé (à parois plus épaisses), mais le forage n'est pas toujours assez profond ce qui amène des casses.</li>
+    <li>On peut fretter l'emboîtement avec un simple ruban adhésif bien tendu, c'est plus simple que de la ficelle collée, et ça tient 2 ans environ (selon pluies). Pré-étirer le ruban adhésif avant de l'enrouler autour du tube. Ne pas utiliser de ruban type électrique qui peut s'étirer indéfiniment.</li>
+    <li>Maintenant, je sais faire des axels, mais faut pas beaucoup de vent.</li>
+  </ol>
+</article>
+
+<!-- ============ ARTICLE FORCE 10 ============ -->
+<article class="page" data-page="art-force10" data-title="Force 10" hidden>
+  <p class="kicker">Articles, plans</p>
+  <h1>Force 10</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/ArtiF10.html · par Maxime ROUSSELLE</p>
+  <p>Je n'ai pas construit pour le moment de nouveau cerf-volant, et je ne voudrais pas publier de plans pour un machin que quelqu'un voudrait construire et qui ne marcherait pas. Désireux cependant de contrer la tendance proclamée à la maigreur du Lucane, et répondant à l'appel de son rédacteur, je vous transmets ce projet. Tous droits sont réservés pour tous pays de la Terre, de Vénus et de Mars (je verrai plus tard pour une extension), et toute personne le construisant sans autorisation écrite signée devant notaire s'expose, outre les embêtements inhérents à la construction et au vol, à des poursuites et à des dommages et intérêts importants et en plus en Euros.</p>
+  <p>L'idée est de faire un cerf-volant pour vent vraiment très fort. Le plan général est un peu dérivé de réalisations de A.C. (je dissimule son nom pour éviter les poursuites, mais de toutes façons, je ne suis pas le premier à le plagier), en employant cependant des matériaux un peu plus sérieux.</p>
+  <p>La surface portante est constituée de deux plaques de fonte circulaires que l'on trouvera facilement au hasard des rues (ne dites pas que je vous ai dit ça, ou les Ponts et Chaussées me tuent). Ne vous laissez cependant pas aller à l'incivisme et placez un couvercle de contre-plaqué sur les trous laissés. Du contre-plaqué de 2,5&nbsp;mm est largement suffisant (tant que personne ne marche dessus). Il est recommandé de le peindre en couleur sombre et discrète. Les plaques d'égout elles-mêmes existent en différents diamètres, mais une année de calculs de portance et de simulations informatiques en soufflerie virtuelle ont montré que, plus que la taille est grande, plus que ça porte. Et comme le poids croît moins vite que le carré de la surface car l'épaisseur relative est plus forte dans les petites tailles, j'ai choisi un diamètre typique de 1&nbsp;mètre. Vous pourrez ainsi ajuster facilement le plan au modèle de plaque dont vous disposerez, à condition de savoir multiplier par 1. Pour vous éviter les sempiternels calculs de mise à l'échelle, je vous joins un abaque géométrique dont voici le mode d'emploi : chercher la taille correspondant à votre plaque sur la ligne supérieure, et lire en correspondance sur la ligne inférieure la taille du modèle à réaliser :</p>
+  <figure class="diagram"><button data-cap="L'abaque de mise à l'échelle : 1 m en haut, 1 m en bas."><img src="img/f10-abaque.jpg" alt="Abaque : deux échelles identiques de 0 à 3 mètres"></button><figcaption>L'abaque de mise à l'échelle (en mètres).</figcaption></figure>
+  <p>Outre les plaques d'égout (je conseille celles des Forges de Pont-à-Mousson qui outre leurs bonnes qualités de vol, ajouteront une touche « collection » à votre cerf-volant), il faut disposer de deux poutrelles en I et en acier d'une longueur de 80&nbsp;cm environ. Une poutrelle de 1,60&nbsp;m peut être utilisée, à condition de la couper en deux parties égales. Vous pouvez utiliser à cette fin une scie à métaux, si votre cerf-volant n'est pas trop grand et si vous êtes patient et costaud. Sinon, un chalumeau est indispensable. Si vous disposez de ce dernier, vous pourrez simplifier la construction en remplaçant les boulons d'assemblage par des soudures qui auront l'avantage de donner un aspect plus léger et aérien à l'ensemble.</p>
+  <p>Pour revenir aux poutrelles, elles seront assemblées parallèlement sous les plaques, d'une part pour les raidir, d'autre part pour servir de dérives verticales, très importantes pour la stabilité du cerf-volant. Si vous ne pouvez souder, deux solutions :</p>
+  <ul class="list">
+    <li>utilisez des tiges filetées traversant toute la structure. Cette solution facilite le pliage en fin de vol et le rangement dans votre véhicule, tout en vous assurant de retrouver un cerf-volant bien réglé à chaque fois ;</li>
+    <li>vous pouvez aussi vous servir de boulons, qui rendent le montage un peu plus fastidieux. Ils allègent un peu la structure, mais celle-ci risque de devenir un peu trop souple et il faudra veiller à une parfaite symétrie pour obtenir un vol correct.</li>
+  </ul>
+  <p>Dans tous les cas, prenez un diamètre égal au 1/50<sup>e</sup> du diamètre de la plaque, soit à peu près 20&nbsp;mm dans notre cas, ce qui devrait suffire pour les forces de vent de l'hémisphère nord.</p>
+  <figure class="diagram"><button data-cap="Vue d'artiste du projet. Copyright Maxime."><img src="img/f10-vue.jpg" alt="Vue d'artiste : deux plaques d'égout superposées bridées par des câbles"></button><figcaption>« Vue d'artiste » du projet.</figcaption></figure>
+  <p>Voici une « vue d'artiste » du projet. Ci-dessous, le plan détaillé qui reste évolutif en fonction des matériaux dont vous pourrez disposer.</p>
+  <figure class="diagram"><button data-cap="Plan détaillé : vue de dessus et vue de face, entraxe 0,334."><img src="img/f10-plan.jpg" alt="Plan : vue de dessus circulaire et vue de face avec boulons"></button><figcaption>Vue de dessus et vue de face.</figcaption></figure>
+  <p>Le bridage est 3 points. Il est réalisé en câble toronné de diamètre 17&nbsp;mm. Il est assemblé à la structure au moyen de pièces à réaliser vous-même, à trouver chez un ship-chandler ou à faire faire par un atelier de Marine selon un modèle destiné aux haubans. Mais j'ai confiance en le sens du bricolage des cervolistes du CVCF. Ces pièces seront reprises sur les boulons de structure. Un boulon supplémentaire devra être ajouté à 12,52&nbsp;cm en arrière du centre. La bride arrière sera peu tendue et utile seulement pour éviter que le cerf-volant ne se mette trop à plat quand vous lâcherez du fil.</p>
+  <p>Vous pourrez également ajouter une queue. Celle-ci sera facilement constituée à partir d'une chaîne d'ancre légère. Laisser l'ancre au bout ajoutera un « plus » pittoresque et original à votre réalisation.</p>
+  <p>J'attends des nouvelles des cerfs-volants réalisés et des essais qui auront lieu. Prévoyez quand même pour cela de bien dégager la zone de chute possible, mais le vent nécessaire aura sans doute déjà agi en ce sens.</p>
+  <p class="sig">MAXIME</p>
+  <p class="ps">PS : si vous croyez qu'on ne peut pas réaliser de CV tout-métal, demandez à François qui a bien fait voler le sien, aussi incroyable que cela paraisse ! À quand ton article, François ?</p>
+</article>
+
+<!-- ============ ARTICLE POURQUOI ============ -->
+<article class="page" data-page="art-pourquoi" data-title="Mais pourquoi on s'est lancé là-dedans ?" hidden>
+  <p class="kicker">Articles, plans</p>
+  <h1>Mais pourquoi on s'est lancé là-dedans ?</h1>
+  <p class="orig">perso.wanadoo.fr/maximecv/ArtiPourquoi.html</p>
+  <p>Les cervolistes sont des gens a priori tous très différents : des jeunes, des vieux, des productifs, des contemplateurs, des peintres, des minutieux qui défont et refont toute la couture si un point est de travers, des organisateurs, etc. Mais qu'est-ce qui nous pousse à mettre en l'air des machins au bout d'une ficelle ?</p>
+  <h2>Pour voler</h2>
+  <p>C'est un plaisir en soi de faire voler un cerf-volant, de le voir monter tant qu'on lâche du fil, de sentir dans ses mains le vent jouer avec, de le voir évoluer avec les variations du vent et les tourbillons, étaler les surventes. Et je ne parle pas ici des cerfs-volants pilotables et de leurs utilisations plus ou moins sportives, mais même des « simples » monofils. Ce plaisir de « voler » (par intérim) peut se suffire à lui-même : pas mal voleront avec un cerf-volant du commerce, ou un cerf-volant existant recopié dans sa forme voire ses couleurs sans vouloir se compliquer la vie pour une recherche conceptuelle qui ne les intéresse pas.</p>
+  <h2>Pour bricoler</h2>
+  <p>Ici, on rencontre le plaisir d'utiliser ses mains et son savoir-faire pour concrétiser Son idée. Il faut en général bénéficier d'une expérience acquise dans le façonnage, la mise en œuvre, l'assemblage des différents matériaux spécifiques du cerf-volant. Et, plus on pratique, plus on entasse d'expérience et plus on est capable de faire mieux, de monter des ensembles que l'on ne voyait pas d'abord par quel bout prendre. On en arrive, avec le plaisir de défricher des domaines nouveaux, à acquérir des techniques encore inconnues, comme l'utilisation du spi, du carbone, du bambou, de la ficelle et des nœuds pour la ligne ou les bridages, la couture spéciale (les assemblages bord à bord, les ourlets courbes, les renforts, l'appliqué…), la peinture éventuellement. On doit fabriquer bien sûr des cerfs-volants, mais aussi des bricoles annexes comme des tentes, des raccords, des piquets spéciaux, des dévidoirs, des sacs, des bannières… qui facilitent la vie ou la rendent plus belle.</p>
+  <h2>Pour concevoir</h2>
+  <p>On entre là dans la création, qui joint à la fois la joie de faire du nouveau et la satisfaction d'être arrivé au résultat cherché dans les domaines technique et/ou artistique. Ces domaines semblent difficilement séparables dans le cerf-volant : on peut faire de l'artistique sans technique, mais de la technique sans aspect artistique semble sans grand intérêt, quoique… : d'une part l'aspect d'un cerf-volant même banal qui vole, surtout avec d'autres, est déjà esthétique en soi ; d'autre part la beauté peut naître d'une forme même simple comme celle du Circoflex. Les mathématiciens parlent bien de « l'élégance » d'une démonstration !</p>
+  <ul class="list">
+    <li>Le volet artistique peut consister seulement à prendre une forme, connue pour bien voler, et à la décorer. Mais il inclut plus souvent la réalisation conjointe d'une forme esthétique, du dessin et des couleurs.</li>
+    <li>Le côté technique de la création couvre l'invention d'une forme nouvelle, complètement ou partiellement. Elle doit répondre à des critères souvent contradictoires : l'œuvre doit être de la forme imaginée, et solide mais pas trop lourde, démontable en un paquet aisément transportable. Elle doit voler, et de manière stable. La satisfaction de ces exigences nécessite la connaissance de contraintes techniques plutôt apprises sur le tas que théoriques et livresques : résistance des matériaux, des assemblages, de l'aérodynamique, pas tant du point de vue de la portance que de celui des « qualités de vol », de la stabilité désirée (celle-ci n'est d'ailleurs pas nécessairement totale : un cerf-volant « cloué dans le ciel » est mal noté pour certains concours en Extrême-Orient, il doit balancer les hanches harmonieusement).</li>
+  </ul>
+  <p>Font partie surtout de l'aspect technique, les essais : ils débutent par les essais de montage et démontage au sol, parfois limités par la taille de votre salon, mais un fana a bien construit un avion dans son garage, abattant les montants de la porte ensuite pour le sortir. Un moment plus important est la joie du premier vol (surtout s'il est réussi du premier coup) et continue plus rigoureusement, quand ça reste à peu près en l'air, par l'observation des défauts :</p>
+  <ul class="list">
+    <li>défauts techniques principalement : poids trop élevé, vol se terminant régulièrement par un planté de tête, cerf-volant qui tire d'un côté, queues qui s'emmêlent obstinément, manche à air qui se transforme en chapelet de saucisses, etc.</li>
+    <li>défauts esthétiques aussi : la constatation en vol seulement de tels défauts n'est pas à exclure : aspect vu de loin différent de celui pensé, proportions inesthétiques, dérives gênant la lisibilité, etc. Ces défauts ne se découvrent souvent que quand le cerf-volant est en l'air et assez haut. Un obstacle surprend quelquefois : la forme du cerf-volant en vol n'est pas « lue » (par soi ou par d'autres observateurs) comme prévu : si vous faites un oiseau et que le premier enfant qui passe dit « oh, le drôle d'avion », vous êtes surpris et déçu, et il y a des exemples beaucoup plus mortifiants. Un monument formant une sorte de dolmen de béton un peu cubique, élevé au Kosovo en hommage aux mineurs a été baptisé là-bas « le Barbecue », vision a posteriori qui n'a sans doute jamais effleuré ni l'artiste ni les commanditaires qui ont pourtant bien dû approuver un modèle réduit !</li>
+  </ul>
+  <p>Pour revenir à la technique, les essais en vol consistent à observer le cerf-volant d'un œil expert pour en définir les défauts (par exemple : le cerf-volant pique en haut de la fenêtre), en trouver la cause, concevoir ce qu'il faut changer (inverser telle courbure,…), le réaliser sur le terrain éventuellement (bout de ficelle ajouté,…), « officialiser » la modif si elle marche (au retour, avec un moyen technique éventuellement différent, plus sûr et plus durable), et re-belote vers un essai… Tout ceci avec diverses forces de vent, car les cerfs-volants se déforment et un cerf-volant qui tire à droite sous Force&nbsp;2 peut tirer à gauche avec Force&nbsp;4.</p>
+  <p>En général, on vole d'abord seul pour essayer, puis avec les copains (regarder leur tête et écouter leurs réflexions surtout pour le côté artistique, bien que, de ce point de vue, on n'en fera en général qu'à sa tête), puis en grand public quand tout va bien.</p>
+  <p>Le plus souvent, on évolue au long de sa carrière avec l'expérience : on peut débuter en recopiant un modèle exactement, puis on modifie (les dimensions, les couleurs), puis on ajoute des appendices, des ailes, des caissons, puis on fait des variations sur un schéma existant, puis on crée un cerf-volant complètement nouveau (cependant les créateurs-nés veulent de suite se lancer dans du nouveau). Cette amélioration constante est gratifiante, et un cervoliste devient bon quand il domine assez le sujet pour aider les autres : d'abord les novices qui viennent d'acheter un Eddy et ont monté le dièdre à l'envers (cas vécu), puis des cervolistes même chevronnés, mais qui n'ont pas forcément le sens de l'observation technique ou les bases aérodynamiques utiles. Il est seulement quelquefois délicat de leur faire changer leurs idées…</p>
+  <h2>Pour utiliser le cerf-volant</h2>
+  <p>Dans ce domaine, le cerf-volant est surtout un moyen.</p>
+  <p>Un porteur, d'abord qui permettra de faire de la photo, de porter des queues ou de stabiliser des structures gonflables, souvent impressionnantes mais dont les qualités de vol et la plage de vent sont fréquemment limitées, de pratiquer l'ascension humaine (hobby quand même peu fréquent…), etc. L'utilisateur est alors moyennement intéressé par le cerf-volant lui-même, il veut surtout que ce soit un « bon » porteur, stable et qui lève des tonnes. Il aura tendance à copier un modèle existant, adapté à son besoin (taille, solidité, queues…). Il n'empêche que l'on rencontre des inconditionnels de leur type de cerf-volant : delta, train de rokakus, calomel… hors duquel point de salut selon eux.</p>
+  <p>Un « tracteur » aussi : un autre mode d'utilisation est en effet la « traction » au sens large. Cela peut être simplement de faire voler de grandes surfaces, tenues à la main. D'abord, ça fait « cerf-volant d'homme » et on a jouissance à sentir que ça tire fort. On peut même se faire traîner (surtout dans le sable où on peut contrôler en freinant et tracer des grands sillons) voire sauter (mais c'est pas à recommander, il faut une forme en béton et des chevilles idem, et êtes-vous sûr d'être assuré pour ça ?). On peut aussi tracter un véhicule : sur le sable ou dans des prairies, avec des buggies à 3 roues, des planches à roulettes, des patinettes montées sur chaussures de ski, voire sur la neige avec des skis, ou sur la glace avec des patins à glace ou des chars à patins. Enfin un mode se développe beaucoup : le kite surf, où on se fait tracter sur l'eau monté sur une planche particulière (elle peut aller dans les 2 sens). Le fait que la voile tire vers le haut et non horizontalement comme en Windsurf permet d'une part d'aller beaucoup plus vite car la planche est très déjaugée et d'autre part de sauter beaucoup plus haut en restant en l'air très longtemps ce qui permet des figures longues, avec plusieurs tours. Et puis, contrairement au sable, il n'y a pas d'obstacles, pas de poteaux ou de touristes à éviter, pas de baïnes. Et surtout, quand on retombe, même en vrac, on ne se fait pas mal, d'autant qu'on a généralement, sous nos climats du moins, une combinaison en néoprène. Le plus dur, c'est de redémarrer. Mais depuis qu'on a inventé la voile à vessies gonflables, c'est devenu un jeu d'enfant (costaud, l'enfant).</p>
+  <h2>Pour apporter aux autres</h2>
+  <p>Le cerf-volant est un plaisir esthétique que l'on a envie d'offrir à des spectateurs. Il l'est individuellement, mais surtout quand un nombre suffisant meuble le ciel et le transforme. Cet effet « en volume » peut être obtenu par la diversité complémentaire de cerfs-volants de différentes couleurs, formes, tailles, types (distinction pour spécialistes). Mais il reste valable, avec un effet différent, pour des CVs tous identiques, voire pour des CVs chacun sans intérêt esthétique notable : l'union fait la force. Par exemple pour les envols par des écoles de dizaines de petits Eddies, ou dans un autre genre pour les « mégateams » qui passionnent plus les spectateurs que les évolutions si parfaites soient-elles de pilotables isolés. Pour obtenir un effet de volume et y participer, pas trente-six solutions, il faut oser venir mettre son CV au milieu des autres, même si on le trouve trop modeste ou banal.</p>
+  <p>Outre ce volet esthétique, le cerf-volant permet d'apporter de la joie vers les écoliers, par exemple, ou vers des hôpitaux dont ça n'est pas le souci principal. C'est une grande joie pour le cervoliste lui-même de faire tenir son cerf-volant par des malades ou des handicapés dont le sourire muet au contact de cette chose semi-vivante vaut le déplacement ; ou encore de passer sa matinée à bidouiller pour les faire voler des machins conçus et réalisés par des enseignants et des élèves pleins de bonne volonté et d'enthousiasme, mais qui postulent que les brides avant et arrière doivent être de même longueur pour le bon équilibre de la chose.</p>
+  <h2>Pour la convivialité</h2>
+  <p>On ne sort pas du sujet, le cerf-volant est un motif puissant de rencontres, discussions sur les idées, projets, personnes, cerfs-volants vus, organisations cervolistiques… Les repas en commun sont un summum de ce point de vue, et je remercie et encourage les organisateurs (de plus en plus nombreux) qui montent des repas, même rustiques. La convivialité est un facteur important, deux indices en sont la preuve :</p>
+  <ul class="list">
+    <li>plusieurs fois, lors de manifestations importantes ou de kermesses locales, des spectateurs ont noté et m'ont rapporté (avec une sorte de surprise née peut-être de la comparaison avec d'autres sports) la grande solidarité qu'ils voient régner entre les cervolistes : ils ne se concurrencent pas, ne se disputent pas quand les cerfs-volants s'emmêlent mais au contraire viennent au secours de celui qui a un problème comme un train qui tire trop pour être rentré ou un cerf-volant tombé dans un arbre.</li>
+    <li>il y a des cervolistes qui viennent aux rencontres sans cerfs-volants. Le désir d'observer, de réunir de la documentation a bon dos, mais s'il n'y avait pas de « rencontres » au sens humain ou gastronomique du terme, ils seraient sans doute moins nombreux.</li>
+  </ul>
+  <h2>Pour les voyages</h2>
+  <p>Les rencontres de cerf-volant sont une bonne occasion de sortir de chez soi, de voir de nouvelles têtes, de nouveaux usages, de nouveaux pays. On fait déjà du tourisme sur le trajet, surtout si on en prend le temps (mais il faut en disposer) d'où la multiplication des camping-cars chez les cervolistes, mais aussi chez les spectateurs. Je me demande d'ailleurs parfois si les spectateurs ne sont pas des camping-caristes ne trouvant dans la rencontre de cerf-volant qu'un but au voyage. Un obstacle pour les cervolistes est la difficulté de faire du tourisme local pendant la manif : on ne peut pas être à la fois sur les terrains et en exploration. Toujours si on a du temps, on peut toujours rester les lendemains de fête au lieu de rentrer chez soi en ligne droite. C'est bien dommage de s'éloigner de 500&nbsp;km de chez soi et de ne pas en profiter pour visiter la région, alors même qu'on ne fera jamais autant de route pour cela.</p>
+  <h2>Pour exercer une fonction</h2>
+  <p>On sort un peu du sujet, mais le désir de monter une association ou un événement majeur, d'y occuper un poste-clé sont des moteurs puissants. Certains critiquent cela à cause des motivations troubles pressenties « c'est pour se faire mousser », « c'est pour embêter ou prendre la place d'untel », etc. N'oublions pas cependant que la plupart se dévouent à cette cause seulement pour le plaisir des cervolistes et du public. De toutes façons, moi, je viens dans les rencontres pour voler. Je ne sais pas organiser, c'est vrai, mais je suis peut-être aussi trop fainéant. Aussi j'admire uniformément l'énergie dépensée et je suis reconnaissant à tous ceux (je dis bien tous) qui montent les structures et les rencontres dont je jouis.</p>
+  <h2>Pour faire admirer son cerf-volant</h2>
+  <p>Toutes les raisons énumérées plus haut ne sont pas fausses, mais la principale motivation des tireurs de ficelle reste quand même de faire admirer leur œuvre par le public, et encore mieux par les experts du métier. Un haut personnage du cerf-volant n'a pas hésité à dire :</p>
+  <blockquote>Il ne faut pas se le cacher : il y a un comédien dans le cœur de chaque cervoliste.</blockquote>
+  <p class="ps">P.S. : Si vous vous êtes reconnu quelque part là-dedans, il s'agit d'une coïncidence entièrement recherchée et non d'un hasard. J'espère au contraire avoir fait le tour de façon à ce que vous n'ayez pas pu y échapper. Si vous ne tombez pas dans au moins 3 rubriques, c'est que vous lisez ce numéro uniquement par hasard dans la salle d'attente d'un dentiste cervoliste. Venez quand même aux rassemblements cervolistiques, ça vaut le coup, et vous aurez peut-être mis le doigt dans l'engrenage…</p>
+  <p class="ps">Et puis, si vous trouvez une raison que je n'aie pas indiquée, écrivez au Lucane, ça fera de la matière pour un article… Amitiés. MAXIME</p>
+</article>
+
+</main>
+</div>
+
+<div class="lb" id="lb" hidden><img id="lbimg" alt=""><p id="lbcap"></p><button id="lbclose" type="button">Fermer</button></div>
+
+<script>
+(function(){
+  const pages=[...document.querySelectorAll('.page')];
+  const ids=pages.map(p=>p.dataset.page);
+  const links=[...document.querySelectorAll('#sidenav a')];
+  const side=document.getElementById('side'), btn=document.getElementById('menubtn');
+  // pagination
+  pages.forEach((p,i)=>{
+    if(p.dataset.page==='sommaire')return;
+    const prev=pages[i-1], next=pages[i+1];
+    const nav=document.createElement('nav'); nav.className='pager';
+    if(prev) nav.insertAdjacentHTML('beforeend',`<a href="#${prev.dataset.page}"><small>Précédent</small>${prev.dataset.title}</a>`);
+    if(next) nav.insertAdjacentHTML('beforeend',`<a class="next" href="#${next.dataset.page}"><small>Suivant</small>${next.dataset.title}</a>`);
+    p.appendChild(nav);
+  });
+  function show(){
+    let id=(location.hash||'').slice(1); if(!ids.includes(id)) id='sommaire';
+    pages.forEach(p=>p.hidden=p.dataset.page!==id);
+    links.forEach(a=>a.getAttribute('href')==='#'+id?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+    const t=pages[ids.indexOf(id)].dataset.title;
+    document.title=id==='sommaire'?'Les oiseaux de Maxime':t+' · Les oiseaux de Maxime';
+    window.scrollTo(0,0);
+    side.classList.remove('open'); btn.setAttribute('aria-expanded','false');
+  }
+  window.addEventListener('hashchange',show); show();
+  btn.addEventListener('click',()=>{const o=side.classList.toggle('open');btn.setAttribute('aria-expanded',String(o));});
+  // visionneuse
+  const lb=document.getElementById('lb'), li=document.getElementById('lbimg'), lc=document.getElementById('lbcap');
+  document.querySelectorAll('figure button').forEach(b=>b.addEventListener('click',()=>{
+    const im=b.querySelector('img'); li.src=im.src; li.alt=im.alt; lc.textContent=b.dataset.cap||''; lb.hidden=false; document.getElementById('lbclose').focus();
+  }));
+  const close=()=>{lb.hidden=true;li.removeAttribute('src')};
+  lb.addEventListener('click',e=>{if(e.target!==li)close()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!lb.hidden)close()});
+})();
+</script>
+</body></html>

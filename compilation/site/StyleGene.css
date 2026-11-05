@@ -1,0 +1,64 @@
+body{font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; color: #000000;}
+body.acc{background: #BBDDFF;}
+body.motiv{background: #FFDDFF;}
+body.pag{background: #BBDDFF;}
+body.cv1{background: #BBFFBB;}
+body.cv2{background: #BBDDFF;}
+body.new{background: #007700;}
+body.fetes{background: #007700;}
+body.rep{background: #77AA77; color: #002244;}
+body.rep5{background: #77AA77; color: #002244;}
+body.rep6{background: #88BB88; color: #002244;}
+body.arti{background: #FFBBBB;}
+body.art1{background: #FFDDDD;}
+body.ami{background: #FFFFBB;}
+body.lnk{background: #DDDDDD;}
+body.eng{background: #0033AA;}
+body.mots{background: #88DDFF; font-size:10pt;}
+h1{
+	font-size: 18pt;
+	font-weight: bold;
+	margin-left: 30px;}
+h2{
+	font-size: 14pt;
+	font-weight: bold;
+	margin-left: 10px;}
+h3{
+	font-size: 12pt;
+	font-weight: bold;
+	margin-left: 5px;}
+table.menu{	/* tableau de boutons */
+		font-family:Arial, Helvetica;
+	font-size: 10pt;
+	/* font-weight: bold; */
+	margin-left: auto;	/* centre le tableau */
+	margin-right: auto;}
+table.menu td{
+	text-align: center;
+	background: #BBBBBB;
+	border-top: solid 4px #FFFFFF;
+	border-right: solid 4px #777777;
+	border-bottom: solid 4px #555555;
+	border-left: solid 4px #CCCCCC;}
+table.menu a:link    { color: #0000BB; }
+table.menu a:active  { color: red; }
+table.menu a:visited { color: #5555bb; font-size: 85%; }
+table.menu a.lead:link    { color: #dd00dd; }
+table.menu a.lead:active  { color: red; }
+table.menu a.lead:visited { color: #dd00dd; font-size: 85%; }
+img{
+	border: 0;
+	margin-right: 10px; 	/* pour ecart avec le texte */
+	margin-left: 10px;
+}
+a.article{	/* pour les titres des articles dans arti */
+	font-size:12pt;
+	font-weight:bold;}
+.titnew{ /* pour new et fetes */
+	font-size:12pt;
+	font-weight:bold;
+}
+.titold{ /* pour fetes */
+	font-size:10pt;
+	font-weight:bold;}
+}
